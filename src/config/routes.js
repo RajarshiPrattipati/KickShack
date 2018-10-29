@@ -6,6 +6,7 @@ const MyLoadable = (opts, preloadComponents) => makeLoadable({ ...opts, firebase
 
 const AsyncDashboard = MyLoadable({ loader: () => import('../pages/Dashboard') })
 const AsyncAbout = MyLoadable({ loader: () => import('../pages/About') })
+const AsyncBookings = MyLoadable({ loader: () => import('../pages/Bookings') })
 const AsyncCompany = MyLoadable({ loader: () => import('../pages/Companies/Company') })
 const AsyncCompanies = MyLoadable({ loader: () => import('../pages/Companies/Companies') }, [AsyncCompany])
 const AsyncTask = MyLoadable({ loader: () => import('../pages/Tasks/Task') })
@@ -16,6 +17,7 @@ const AsyncCollection = MyLoadable({ loader: () => import('../pages/Collection')
 const routes = [
   <RestrictedRoute type='private' path="/" exact component={AsyncDashboard} />,
   <RestrictedRoute type='private' path="/dashboard" exact component={AsyncDashboard} />,
+  <RestrictedRoute type='private' path="/bookings" exact component={AsyncBookings} />,
   <RestrictedRoute type='private' path="/about" exact component={AsyncAbout} />,
   <RestrictedRoute type='private' path="/companies" exact component={AsyncCompanies} />,
   <RestrictedRoute type='private' path="/companies/edit/:uid" exact component={AsyncCompany} />,

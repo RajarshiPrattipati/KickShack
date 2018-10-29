@@ -6,20 +6,22 @@ import grants from './grants'
 
 const config = {
   firebase_config: {
-    apiKey: 'AIzaSyBQAmNJ2DbRyw8PqdmNWlePYtMP0hUcjpY',
-    authDomain: 'react-most-wanted-3b1b2.firebaseapp.com',
-    databaseURL: 'https://react-most-wanted-3b1b2.firebaseio.com',
-    projectId: 'react-most-wanted-3b1b2',
-    storageBucket: 'react-most-wanted-3b1b2.appspot.com',
-    messagingSenderId: '258373383650'
+    apiKey: "AIzaSyAuptJSdlTyPcNPzpfP5FxlawtCgtE61eo",
+    authDomain: "kickshack-d6650.firebaseapp.com",
+    databaseURL: "https://kickshack-d6650.firebaseio.com",
+    projectId: "kickshack-d6650",
+    storageBucket: "kickshack-d6650.appspot.com",
+    messagingSenderId: "1064607114282"
+
   },
   firebase_config_dev: {
-    apiKey: 'AIzaSyB31cMH9nJnERC1WCWA7lQHnY08voLs-Z0',
-    authDomain: 'react-most-wanted-dev.firebaseapp.com',
-    databaseURL: 'https://react-most-wanted-dev.firebaseio.com',
-    projectId: 'react-most-wanted-dev',
-    storageBucket: 'react-most-wanted-dev.appspot.com',
-    messagingSenderId: '70650394824'
+    apiKey: "AIzaSyDTD3byhhThnysyYiBQdLkKqDEHDB9q40s",
+    authDomain: "kickshackdev.firebaseapp.com",
+    databaseURL: "https://kickshackdev.firebaseio.com",
+    projectId: "kickshackdev",
+    storageBucket: "kickshackdev.appspot.com",
+    messagingSenderId: "760764660486"
+
   },
   firebase_providers: [
     'google.com',

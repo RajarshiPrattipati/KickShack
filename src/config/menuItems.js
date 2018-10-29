@@ -74,6 +74,12 @@ const getMenuItems = (props) => {
       leftIcon: <Icon className='material-icons' >dashboard</Icon>
     },
     {
+      value: '/bookings',
+      visible: isAuthorised,
+      primaryText: intl.formatMessage({ id: 'Bookings' }),
+      leftIcon: <Icon className='material-icons' >tables</Icon>
+    },	
+    {
       visible: isAuthorised,
       primaryText: intl.formatMessage({ id: 'chats' }),
       primaryTogglesNestedList: true,

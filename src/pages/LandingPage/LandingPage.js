@@ -13,6 +13,10 @@ import { withStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
+import { AutoRotatingCarousel } from 'material-auto-rotating-carousel';
+import { Slide } from 'material-auto-rotating-carousel';
+const { red, blue, green } = require('@material-ui/core/colors');
+
 
 const styles = theme => ({
   main: {
@@ -150,11 +154,18 @@ class LandingPage extends Component {
       history.push('/signin')
     }
   }
+    constructor(props) {
+    super(props);
+    this.state = {open:false}
+    this.setState = this.setState.bind(this);
+    }
 
 
   render() {
     const { classes, history, theme } = this.props
 
+    
+	
     return (
       <div className={classes.main}>
         <Helmet>
@@ -178,18 +189,7 @@ class LandingPage extends Component {
                 <LockIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip-icon2" title="GitHub repository">
-              <IconButton
-                name='github'
-                aria-label='Open Github'
-                color='inherit'
-                href='https://github.com/TarikHuber/react-most-wanted'
-                target='_blank'
-                rel='noopener'
-              >
-                <GitHubIcon />
-              </IconButton>
-            </Tooltip>
+            
           </Toolbar>
         </AppBar>
 
@@ -199,7 +199,7 @@ class LandingPage extends Component {
           <div className={classes.hero}>
             <div className={classes.content}>
               <img
-                src='/rmw.svg'
+                src='/logo.jpg'
                 alt='Material-UI Logo'
                 className={classes.logo}
               />
@@ -212,27 +212,41 @@ class LandingPage extends Component {
                   gutterBottom
                   className={classes.title}
                 >
-                  {'REACT MOST WANTED'}
+                  {'KICKSHACK'}
                 </Typography>
-                <Typography
-                  variant='headline'
-                  component='h2'
-                  color='inherit'
-                  gutterBottom
-                  className={classes.headline}
-                >
-                  {'React Starter-Kit with all Most Wanted features.'}
-                </Typography>
-                <Button
-                  onClick={() => { history.push('/signin') }}
-                  className={classes.button}
-                  variant='outlined'
-                  color='primary'
-                >
-                  {'Get Started'}
-                </Button>
-              </div>
-
+                
+               <div style={{ position: 'relative', width: '100', height: 500 }}>
+		  <Button onClick={() => this.setState({ open: true }) }  style={{width: 200, height: 100, backgroundColor: '#C8DA2D', align:'center'}} >PARTY BOOKINGS</Button>
+		  <AutoRotatingCarousel
+		    label='Get started'
+		    open={this.state.open}
+		    onClose={() => this.setState({ open: false })}
+		    style={{ position: 'absolute' }}
+		  >
+		    <Slide
+		      media={<img src='http://www.icons101.com/icon_png/size_256/id_79394/youtube.png' />}
+		      mediaBackgroundStyle={{ backgroundColor: red[400] }}
+		      style={{ backgroundColor: red[600] }}
+		      title='This is a very cool feature'
+		      subtitle='Just using this will blow your mind.'
+		    />
+		    <Slide
+		      media={<img src='http://www.icons101.com/icon_png/size_256/id_80975/GoogleInbox.png' />}
+		      mediaBackgroundStyle={{ backgroundColor: blue[400] }}
+		      style={{ backgroundColor: blue[600] }}
+		      title='Ever wanted to be popular?'
+		      subtitle='Well just mix two colors and your are good to go!'
+		    />
+		    <Slide
+		      media={<img src='http://www.icons101.com/icon_png/size_256/id_76704/Google_Settings.png' />}
+		      mediaBackgroundStyle={{ backgroundColor: green[400] }}
+		      style={{ backgroundColor: green[600] }}
+		      title='May the force be with you'
+		      subtitle='The Force is a metaphysical and ubiquitous power in the Star Wars fictional universe.'
+		    />
+		  </AutoRotatingCarousel>
+		</div>
+	</div>
               <div className={classes.cardsContent}>
                 <Card className={classes.card}>
                   <CardContent>
