@@ -4,15 +4,14 @@ import { injectIntl, intlShape } from 'react-intl'
 import { Activity } from 'rmw-shell'
 import Button from '@material-ui/core/Button'
 import { withFirebase } from 'firekit-provider'
-import TextField from '@material-ui/core/TextField'
 // eslint-disable-next-line
 import firestore from 'firebase/firestore'
-import Typography from '@material-ui/core/Typography'
 import { Manager, Reference, Popper } from 'react-popper';
 import {DateFormatInput} from 'material-ui-next-pickers'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
-var date = new Date().toDateString();
+
+var gdate = new Date().toDateString();
 
 
 
@@ -80,23 +79,26 @@ class YourComponent extends React.Component {
 
 
   onChangeDate = (date:Date) => {
-
-    this.setState({date})
+   
+    let datestr = date.toDateString()
+    //this.setState({datestr})
+    this.props.refresh(datestr)
   } 
 
 
  constructor(props) {
     super(props);
-    this.state = {date:false }
+    this.state = this.props.date
     this.setState = this.setState.bind(this);
-    this.today = new Date()
+    this.today = new Date().toDateString()
+	
     }
   render() {
-    const {date} = this.state
+    const {date} = this.state 	
     
     return (
       <div >
-        <DateFormatInput name='date-input' value={date} onChange={this.onChangeDate} minDate={this.today}/>
+        <DateFormatInput name='date-input' value={date} onChange={this.onChangeDate} min={new Date()}/>
 	
       </div>
 
@@ -107,16 +109,20 @@ class YourComponent extends React.Component {
 class Bookings extends Component {
 
   constructor(props) {
+    let data = []
     super(props);
+	
+	
     this.state = {
-      value: '',
-      bookings: [],
-      date : new Date()
+	  
+      bookings: data,
+      date : new Date().toDateString()
     };
+    this.handleRefresh = this.handleRefresh.bind(this)
   }
 
   componentWillMount() {
-    let data = [
+ /*   let data = [
   {time:'8 AM', t01:0 , t02:1 , t31:0 , t32:0},
   {time:'9 AM', t01:1 , t02:1 , t31:0 , t32:'0'},
   {time:'10 AM', t01:0 , t02:1 , t31:1 , t32:0},
@@ -135,7 +141,19 @@ class Bookings extends Component {
   {time:'11 PM', t01:1 , t02:0 , t31:0 , t32:0},
 
 ];
+  
   this.setState({bookings:data})
+*/
+	let data = []
+	const { firebaseApp } = this.props
+	let firestore = firebaseApp.firestore()
+	console.log('Gdate ' , gdate)
+	const docRef = firestore.collection('bookings').doc(gdate)
+	docRef.get().then(function(doc) {
+		data.push( doc.data().bookings)
+	  });
+	this.setState({bookings:data})
+       
   }
 
   componentWillUnmount() {
@@ -147,11 +165,77 @@ class Bookings extends Component {
 
     let firestore = firebaseApp.firestore()
 
-    const docRef = firestore.doc('bookings/'+date)
-
+    const docRef = firestore.doc('bookings/'+this.state.date)
+	
     docRef.set({
-      bookings: this.state.bookings
+      bookings: this.state.bookings[0]
     })
+  }
+  handleRefresh (date){
+	
+	const { firebaseApp } = this.props
+	let firestore = firebaseApp.firestore()
+	this.setState({date:date})
+	setTimeout(function() { //Start the timer
+      	this.setState({render: true}) //After 1 second, set render to true
+ 	 }.bind(this), 2000)	
+    	const docRef = firestore.collection('bookings').doc(date)
+	docRef.get().then((doc)	=> {
+	  
+	    if (doc.exists) {
+		
+		let data = []
+		docRef.get().then(function(doc) {
+		data.push( doc.data().bookings)
+	 	 });
+		
+		this.setState({bookings:data})
+		console.log(" gone? data:", this.state);
+		
+	    } else {
+		let data = [
+		  {time:'8 AM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'9 AM', t01:1 , t02:1, t31:1, t32:1},
+		  {time:'10 AM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'11 AM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'12 PM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'1 PM', t01:1 , t02:1, t31:1 , t32:1},
+		  {time:'2 PM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'3 PM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'4 PM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'5 PM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'6 PM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'7 PM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'8 PM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'9 PM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'10 PM', t01:1 , t02:1 , t31:1 , t32:1},
+		  {time:'11 PM', t01:1 , t02:1 , t31:1 , t32:1},
+
+		];
+		  console.log("New Data : ",data)
+		docRef.set({
+    		  bookings: data
+   		 })
+		data = []
+		docRef.get().then(function(doc) {
+		data.push( doc.data().bookings)
+	 	 });
+		
+		this.setState({bookings:data})
+		console.log(" gone? data:", this.state);
+		
+		  this.setState({bookings:data})
+		console.log("No such document!");
+	    }
+	}).catch(function(error) {
+	
+
+	    console.log("Error getting document:", error);
+		
+	});
+	
+	
+  
   }
 
 
@@ -159,13 +243,11 @@ class Bookings extends Component {
   render() {
     const { intl, bookings, isWatching } = this.props
 	const wellStyles = { maxWidth: 400, margin: '20px auto 20px' };
-
     return (
       <Activity title={intl.formatMessage({ id: 'Bookings' })}>
 
 	<div className="well" style={wellStyles}>
 	<Manager>
-
 
 	    <Reference>
 	      {({ ref }) => (
@@ -178,7 +260,7 @@ class Bookings extends Component {
 	    <Popper placement="right">
 	      {({ ref, style, placement, arrowProps }) => (
 		<div ref={ref} style={style} data-placement={placement}>
-		  <span><YourComponent ></YourComponent></span>
+		  <span><YourComponent date={this.state.date} refresh={this.handleRefresh}></YourComponent ></span>
 		  <div ref={arrowProps.ref} style={arrowProps.style} />
 		</div>
 	      )}
@@ -186,8 +268,7 @@ class Bookings extends Component {
  	</Manager>
 	</div>
 	<ReactTable
-    data={this.state.bookings}
-    resolveData={data => data.map(row => row)}
+    data={this.state.bookings[0]}
     columns={columns}
     sortable={false}
     defaultPageSize = '8'
@@ -227,10 +308,8 @@ Bookings.propTypes = {
 
 const mapStateToProps = (state) => {
   const { docs, initialization } = state;
-
-  const bookings = docs['bookings/'+date] ? docs['bookings/'+date] : {}
-  const isWatching = initialization['bookings/'+date] ? true : false
-
+  const bookings = docs['bookings/'+gdate] ? docs['bookings/'+gdate] : {}
+  const isWatching = new Date().toDateString()
   return {
     bookings,
     isWatching
